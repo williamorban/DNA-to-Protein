@@ -1,1 +1,1 @@
-super cool program that can convert from amino acid, DNA, and RNA to any of the other forms mentioned!!
+super cool program that can convert from DNA/RNA to RNA/DNA or protein!!
