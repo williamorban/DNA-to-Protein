@@ -26,6 +26,7 @@ def navigation():
       goHome()
     case 1:
       quit()
+
 def goHome():
   print(f"Hello! Welcome to the ultimate super spiffy DNA/RNA/Protein translator 3000!\n")
   navChoice=int(input(f"Please enter the number based on the starting value you plan on inputting: \n\n[0] : DNA\n[1] : RNA \n[2] : Amino Acid (2-letter abbreviation)\n\nSelection: "))
@@ -40,8 +41,14 @@ def goHome():
 tempList=[]
 aaList=[]
 looseNucleotides=[]
+again=1
+
 def dna():
-  while True:
+  global again
+  while again==1:
+    tempList=[]
+    aaList=[]
+    looseNucleotides=[]
     dna=input(f"Please enter your DNA sequence below: \n")
     dnaList=[]
     for nucleotide in dna:
@@ -61,7 +68,7 @@ def dna():
         case "G":
           rnaList.append("C")
     rna = "".join(rnaList)
-    print(f"\n\nRna squence: {rna}")
+    print(f"\n\nRNA squence: {rna}")
 
 
     while len(rnaList) > 0:
@@ -69,16 +76,76 @@ def dna():
           try:
             tempList.append(rnaList[0])
             rnaList.pop(0)
-          except IndexError:
-            print(f"Extra nucleotides found:\n\n")
+            tempStr="".join(tempList)
+            for codon in codonTable:
+              if codon == tempStr:
+                aaList.append(codonTable[codon])
+          except IndexError: #if, despite the fact that the 3 codon loop is still going on, a base pair cannot be appended because it is not found
+            print(f"Extra nucleotides found:\n\n{', '.join(tempList)}\n\n") #then a list of extra nucleotides are printed based on what has alredy been added to temp list how cool!!
             break
-          finally:
-            tempList.clear()
-            tempStr=None
-        tempStr="".join(tempList)
-        for codon in codonTable:
-          if codon == tempStr:
-              aaList.append(codonTable[codon])
-    print(f"AAList: {', '.join(aaList)}")
+        tempList.clear()
+        tempStr=None
 
+    print(f"Amin Acid List: {', '.join(aaList)}")
+    again=int(input(f"\n\nWould you like to decode another DNA sequence? Enter the number corresponding to your decision below.\n[0] : No, return home\n[1] : Yes\nSelection:  "))
+    match again:
+      case 0:
+        print(f"\nReturning home...\n")
+        goHome()
+        break
+      case 1:
+        print(f"\nProceeding again...\n")
+
+def rna():
+  global again
+  while again==1:
+    tempList=[]
+    aaList=[]
+    looseNucleotides=[]
+    rna=input(f"Please enter your RNA sequence below: \n")
+    rnaList=[]
+    for nucleotide in rna:
+      if nucleotide.upper() in rnaNucleotides:
+        rnaList.append(nucleotide.upper())
+      else: 
+        print(f"Invalid character '{nucleotide}' received. Removed. ")
+    dnaList=[]
+    for bp in rnaList:
+      match bp.upper():
+        case "A":
+          dnaList.append("T")
+        case "U":
+          dnaList.append("A")
+        case "C":
+          dnaList.append("G")
+        case "G":
+          dnaList.append("C")
+    dna = "".join(dnaList)
+    print(f"\nDNA squence: {dna}")
+
+
+    while len(rnaList) > 0:
+        for i in range(3):
+          try:
+            tempList.append(rnaList[0])
+            rnaList.pop(0)
+            tempStr="".join(tempList)
+            for codon in codonTable:
+              if codon == tempStr:
+                aaList.append(codonTable[codon])
+          except IndexError: 
+            print(f"Extra nucleotides found:\n\n{', '.join(tempList)}\n\n") 
+            break
+        tempList.clear()
+        tempStr=None
+
+    print(f"Amino Acid List: {', '.join(aaList)}")
+    again=int(input(f"\n\nWould you like to decode another RNA sequence? Enter the number corresponding to your decision below.\n[0] : No, return home\n[1] : Yes\nSelection:  "))
+    match again:
+      case 0:
+        print(f"\nReturning home...\n")
+        goHome()
+        break
+      case 1:
+        print(f"\nProceeding again...\n")
 goHome()
